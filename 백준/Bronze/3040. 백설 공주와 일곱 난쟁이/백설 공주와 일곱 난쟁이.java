@@ -1,35 +1,38 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
 
 public class Main {
+    static int[] arr;
+    static boolean[] isSelected;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        int[] arr = new int[9];
-        int sum = 0;
-        int num1 = 0;	// 일곱 난쟁이가 아닌 애
-        int num2 = 0;	// 일곱 난쟁이가 아닌 애
-        for(int i=0; i<arr.length; i++) {
-            arr[i] = scan.nextInt();
-            sum += arr[i];
+        arr=new int[9];
+        isSelected=new boolean[9];
+        for(int i=0;i<9;i++){
+            arr[i]=Integer.parseInt(br.readLine());
         }
-
-        for(int i=0; i<arr.length-1; i++) {
-            for(int j=i; j<arr.length; j++) {
-                if(sum - arr[i] - arr[j] == 100 && i != j) {
-                    num1 = i;
-                    num2 = j;
-                    break;
+        solve(0,0,0);
+    }
+    private static void solve(int cnt, int seven,int sum){
+        if(cnt==9){
+            if(seven==7 && sum==100){
+                for(int i=0;i<9;i++){
+                    if(isSelected[i]) System.out.println(arr[i]);
                 }
             }
+            return;
         }
+            isSelected[cnt]=true;
+            solve(cnt+1,seven+1,sum+arr[cnt]);
+            isSelected[cnt]=false;
+            solve(cnt+1,seven,sum);
 
-        for(int i=0; i<arr.length; i++) {
-            if(i == num1 || i == num2)
-                continue;
-            System.out.println(arr[i]);
+
         }
-
-        scan.close();
-    }
 
 }
