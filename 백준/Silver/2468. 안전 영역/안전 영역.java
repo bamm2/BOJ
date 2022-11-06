@@ -1,62 +1,80 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int n;
-	static int[][] map;
-	static boolean[][] checked;
-	static int[] dx = {1, 0, -1, 0};
-	static int[] dy = {0,- 1, 0, 1};
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		n = Integer.parseInt(br.readLine());
-		
-		map = new int[n][n];
-		
-		int maxHeight=0;
-		for(int i=0; i<n; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			for(int j=0; j<n; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if(map[i][j] > maxHeight) {
-					maxHeight =map[i][j];
-				}
-			}
-		}
-		
-		int max =0;
-		// 1. 모든 지역 탐색
-		for(int height=0; height<maxHeight+1; height++) {
-			checked = new boolean[n][n];
-			int cnt=0;
-			for(int i=0; i<n; i++) {
-				for(int j=0; j<n; j++) {
-					// 2. 안전 영역 탐지
-					if(!checked[i][j] && map[i][j] > height){
-						cnt+=dfs(i,j,height); // 해당 안전영역 탐색 시작
-					}
-					
-				}
-			}
-			max = Math.max(max, cnt);
-		}
-		System.out.println(max);
-	}
-	// 안전 영역 DFS탐색
-	static int dfs(int x, int y, int height) {
-		checked[x][y] = true;
-		for(int i=0; i<4; i++) {
-			int nx = x +dx[i];
-			int ny = y +dy[i];
-			
-			if(nx<0 || ny<0 || nx>n-1 || ny >n-1) continue;
-			if(checked[nx][ny]) continue;
-			if(map[nx][ny]> height) {
-				dfs(nx,ny, height);
-			}
-		}
-		return 1;
-	}
+
+    static int N,map[][];
+    static boolean[][] visited;
+    static int[][] dir ={{-1,0},{1,0},{0,1},{0,-1}};
+    static class Point{
+        int r,c;
+        Point(int r, int c){
+            this.r=r;
+            this.c=c;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        N=Integer.parseInt(br.readLine());
+
+        map=new int[N][N];
+
+        int maxheight=Integer.MIN_VALUE;
+        for(int i=0;i<N;i++){
+            st=new StringTokenizer(br.readLine()," ");
+            for(int j=0;j<N;j++){
+                map[i][j]=Integer.parseInt(st.nextToken());
+                if(maxheight<map[i][j]) maxheight=map[i][j];
+            }
+        }
+
+        int ans=0;
+        for(int k=maxheight;k>0 ;k--) {
+            int cnt=0;
+            visited=new boolean[N][N];
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if(map[i][j]>k && !visited[i][j]){
+                        bfs(i,j,k);
+                        cnt++;
+                    }
+                }
+            }
+            if(cnt>ans) ans=cnt;
+        }
+        if(ans==0) System.out.println(1);
+        else System.out.println(ans);
+    }
+
+    private static void bfs(int r,int c,int range){
+        Queue<Point> q =new ArrayDeque<>();
+        q.offer(new Point(r,c));
+        visited[r][c]=true;
+
+        while(!q.isEmpty()){
+            Point curr=q.poll();
+
+            for(int d=0;d<4;d++){
+                int nr =curr.r+dir[d][0];
+                int nc= curr.c+dir[d][1];
+                if(isOut(nr,nc)) continue;
+                if(visited[nr][nc]) continue;
+                if(map[nr][nc]<=range) continue;
+                visited[nr][nc]=true;
+                q.offer(new Point(nr,nc));
+            }
+        }
+    }
+
+    private static boolean isOut(int r,int c){
+        return (r<0 || c<0 || r>=N || c>=N);
+    }
+
 }
