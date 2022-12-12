@@ -1,72 +1,76 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int H,W,ans;
-    static char[][] map;
-    static int[][] dir= { {-1,0},{1,0},{0,1}, {0,-1}};
-    static class Point{
-        int r,c,cnt;
-        Point(int r, int c,int cnt){
-            this.r=r;
-            this.c=c;
-            this.cnt=cnt;
+
+    static int R, C, map[][], ans;
+    static boolean[][] visited;
+    static int[][] dir={{1,0},{-1,0},{0,1},{0,-1}};
+
+    static class Point {
+        int r, c, cnt;
+
+        Point(int r, int c, int cnt) {
+            this.r = r;
+            this.c = c;
+            this.cnt = cnt;
         }
     }
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw =new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
-        st=new StringTokenizer(br.readLine()," ");
-        H=Integer.parseInt(st.nextToken());
-        W=Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
 
-        map=new char[H][W];
-        for(int i=0;i<H;i++){
-            String s =br.readLine();
-            for(int j=0;j<W;j++){
-                map[i][j]=s.charAt(j);
+        map = new int[R][C];
+
+        for (int i = 0; i < R; i++) {
+            String s = br.readLine();
+            for (int j = 0; j < C; j++) {
+                map[i][j] = s.charAt(j);
             }
         }
 
-        ans=0;
-        for(int i=0;i<H;i++){
-            for(int j=0;j<W;j++){
-                if(map[i][j]=='L'){
-                    bfs(i,j);
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                visited = new boolean[R][C];
+                if (map[i][j] == 'L') {
+                    bfs(i, j);
                 }
             }
         }
-        
-        bw.write(ans+"\n");
-        bw.flush();
-        bw.close();
-        br.close();
-    }
-    private static void bfs(int r ,int c){
-        boolean[][] visited= new boolean[H][W];
-        Queue<Point> q =new ArrayDeque<>();
-        q.offer(new Point(r,c,0));
-        visited[r][c]=true;
 
-        while(!q.isEmpty()){
-            Point curr=q.poll();
-                for (int d = 0; d < 4; d++) {
-                    int nr = curr.r + dir[d][0];
-                    int nc = curr.c + dir[d][1];
-                    if (isOut(nr, nc) || visited[nr][nc]) continue;
-                    if (map[nr][nc] == 'W') continue;
-                    visited[nr][nc] = true;
-                    q.offer(new Point(nr, nc,curr.cnt+1));
-                }
-            ans=ans>curr.cnt?ans:curr.cnt;
+        System.out.println(ans);
+    }
+
+    private static void bfs(int r, int c) {
+        visited[r][c] = true;
+        Queue<Point> q = new ArrayDeque<>();
+        q.offer(new Point(r, c, 0));
+
+        while (!q.isEmpty()) {
+            Point curr = q.poll();
+            if (curr.cnt > ans) ans = curr.cnt;
+            for(int d=0;d<4;d++){
+                int nr=curr.r+dir[d][0];
+                int nc=curr.c+dir[d][1];
+                if(isOut(nr,nc) || map[nr][nc]=='W') continue;
+                if(visited[nr][nc]) continue;
+                visited[nr][nc]=true;
+                q.offer(new Point(nr,nc,curr.cnt+1));
+            }
         }
     }
-    private static boolean isOut(int r,int c){
-        if(r<0 || c<0 || r>=H || c>=W) return true;
-        return false;
+
+    private static boolean isOut(int r, int c) {
+        return r<0 || c<0 || r>=R || c>=C ;
     }
+
+
 }
