@@ -1,36 +1,32 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int L , C ;
-    static char[] arr,ans;
-
-    static char[] vowel= { 'a', 'e', 'i', 'o', 'u'};
-    static List<String> list =new ArrayList<>();
+    static char word[],alphabet[];
+    static int wordLen,N;
+     static char[] vowelArr={'a','e','i','o','u'};
+    static List<String> list = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw =new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
         st=new StringTokenizer(br.readLine()," ");
-        L=Integer.parseInt(st.nextToken()); // 문자 길이
-        C=Integer.parseInt(st.nextToken()); // 문자 개수
-
-        arr =new char[C];
-        ans =new char[L];
+        wordLen=Integer.parseInt(st.nextToken());
+        N=Integer.parseInt(st.nextToken());
 
         st=new StringTokenizer(br.readLine()," ");
-        for(int i=0;i<C;i++){
-            arr[i]=st.nextToken().charAt(0);
-        }
-        Arrays.sort(arr);
 
-        comb(0,0);
+        word=new char[wordLen];
+        alphabet=new char[N];
+        for(int i=0;i<N;i++){
+            alphabet[i]=st.nextToken().charAt(0);
+        }
+        Arrays.sort(alphabet);
+
+        solve(0,0);
 
         for(int i=0;i<list.size();i++)
             bw.write(list.get(i)+"\n");
@@ -39,38 +35,35 @@ public class Main {
         bw.close();
         br.close();
     }
-    private static void comb(int idx, int start){
-        if(idx==L){
-            if(chk()){
-                list.add(makeString());
+    private static void solve(int idx,int start){
+        if(idx==wordLen){
+            int vowelCnt= vowelChk();
+            if(vowelCnt>=1 && wordLen-vowelCnt>=2){
+                String s="";
+                for(int i=0;i<wordLen;i++){
+                    s+=word[i];
+                }
+                list.add(s);
             }
             return;
         }
 
-        for(int i=start; i<C ; i++){
-            ans[idx]=arr[i];
-            comb(idx+1,i+1);
+        for(int i=start;i<N;i++){
+            word[idx]=alphabet[i];
+            solve(idx+1,i+1);
         }
     }
 
-    private static String makeString(){
-        String s="";
-        for(int i=0;i<L;i++){
-            s+=ans[i];
-        }
-        return s;
-    }
-    private static boolean chk(){
-       int cnt=0;
-        for(int i=0;i<L;i++){
-            for(int d=0;d<5;d++){
-                if(ans[i]==vowel[d]){
-                    cnt++;
-                    break;
+    private static int vowelChk(){
+        int num=0;
+        for(int i=0;i<wordLen;i++){
+            for(int j=0;j<5;j++) {
+                if (word[i]==vowelArr[j]){
+                    num++;
                 }
             }
         }
-        if(cnt>=1 && L-cnt>=2) return true;
-        return false;
+        return num;
     }
+
 }
