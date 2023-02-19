@@ -1,83 +1,84 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
-
-/*
-    N*M 직사각형
-    청소기 동서남북 으로 이동가능
-
-    현재 위치 청소 - > 현재 방향 기준 왼쪽으로 차례대로 탐색
-    왼쪽방향 청소 안한공간 있으면 왼쪽 회전 후 한칸 전진
-    왼쪽 청소 되어 있으면 왼쪽으로 방향만 전환
-    네 방향 청소 되어있거나 벽인 경우 바라보는 방향에서 후진 1칸
-    네 방향 청소 되어있거나 벽이면서 뒤쪽이 벽이면 끝
-
-    로봇청소기 좌표 r,c  방향 0 북 1 동 2 남 3 서
-    빈칸 0 벽 1
- */
-
 
 public class Main {
 
-    static int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; // 북 동 남 서
-    static int N, M, R, C, Robotdir, map[][], ans;
+    static class Point{
+        int r,c,d;
+        Point(int r,int c,int d){
+            this.r=r;
+            this.c=c;
+            this.d=d;
+        }
+    }
+
+    static int R,C,map[][];
+    static int[][] dir={{-1,0},{0,1},{1,0},{0,-1}}; //북 , 동 , 남 , 서
     static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st;
 
-        N = Integer.parseInt(st.nextToken()); // 행
-        M = Integer.parseInt(st.nextToken()); // 열
+        st=new StringTokenizer(br.readLine()," ");
+        R=Integer.parseInt(st.nextToken());
+        C=Integer.parseInt(st.nextToken());
 
-        st = new StringTokenizer(br.readLine(), " ");
-        R = Integer.parseInt(st.nextToken()); // 로봇청소기 행
-        C = Integer.parseInt(st.nextToken()); // 로봇청소기 열
-        Robotdir = Integer.parseInt(st.nextToken()); // 방향 0 북 1 동 2 남 3 서
+        st=new StringTokenizer(br.readLine()," ");
+        int robotR=Integer.parseInt(st.nextToken());
+        int robotC=Integer.parseInt(st.nextToken());
+        int robotD=Integer.parseInt(st.nextToken());
 
-
-        map = new int[N][M];
-        visited = new boolean[N][M];
-
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
-            for (int j = 0; j < M; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+        visited=new boolean[R][C];
+        map=new int[R][C];
+        for(int i=0;i<R;i++){
+            st=new StringTokenizer(br.readLine()," ");
+            for(int j=0;j<C;j++){
+                map[i][j]=Integer.parseInt(st.nextToken());
             }
         }
-        ans = 1;
-        dfs(R, C, Robotdir);
+
+        int[][] newmap=new int[R][C];
+        Queue<Point> q =new ArrayDeque<>();
+        q.offer(new Point(robotR,robotC,robotD));
+        visited[robotR][robotC]=true;
+        int ans=1; // 로봇청소기 청소한 공간 , 시작공간 먼저 청소하고 시작
+        newmap[robotR][robotC]=ans;
+        while(!q.isEmpty()){
+            Point curr=q.poll();
+
+            boolean sign=false;
+            for(int d=3;d>=0;d--){
+                int nr=curr.r+dir[(curr.d+d)%4][0];
+                int nc=curr.c+dir[(curr.d+d)%4][1];
+                int nd=(curr.d+d)%4;
+                if(isOut(nr,nc)) continue;
+                if(map[nr][nc]==1) continue;
+                if(!visited[nr][nc] && map[nr][nc]==0){
+                    visited[nr][nc]=true;
+                    q.offer(new Point(nr,nc,nd));
+                    sign=true;
+                    ans++;
+                    newmap[nr][nc]=ans;
+                    break;
+                }
+            }
+            if(!sign){
+                int nr =curr.r+dir[(curr.d+2)%4][0];
+                int nc =curr.c+dir[(curr.d+2)%4][1];
+                int nd =curr.d;
+                if(isOut(nr,nc) || map[nr][nc]==1) break;
+                else q.offer(new Point(nr,nc,nd));
+            }
+        }
         System.out.println(ans);
-
     }
 
-    private static void dfs( int r, int c ,int direct){
-        visited[r][c]=true;
-
-        for(int d=0;d<4;d++){
-            direct=(direct+3)%4; // 북동남서 -> 서북동남
-            int nr=r+dir[direct][0];
-            int nc=c+dir[direct][1];
-            if(isOut(nr,nc)) continue;
-            if(map[nr][nc]==0 && !visited[nr][nc]){
-                ans++;
-                dfs(nr,nc,direct);
-                return;
-            }
-        }
-
-        int back=(direct + 2) % 4;
-        int backR=r+dir[back][0];
-        int backC=c+dir[back][1];
-
-        if(!isOut(backR,backC) && map[backR][backC]!=1){
-            dfs(backR,backC,direct);
-        }
+    private static boolean isOut(int r, int c){
+        return r<0 || c<0 || r>=R || c>=C;
     }
-    private static boolean isOut(int r,int c){
-        if(r<0 || c<0 || r>=N || c>=M) return true;
-        return false;
-    }
-
 }
