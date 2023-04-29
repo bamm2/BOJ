@@ -8,9 +8,9 @@ public class Main {
     static long A,B;
     static long ans=100_000_001L;
     static class Point {
-        String num;
+        long num;
         int cnt;
-        Point(String num,int cnt){
+        Point(long num,int cnt){
             this.num=num;
             this.cnt=cnt;
         }
@@ -30,18 +30,18 @@ public class Main {
 
     private static void solve(long num){
         Queue<Point> q =new ArrayDeque<>();
-        q.offer(new Point(String.valueOf(num),1));
+        q.offer(new Point(num,1));
 
         while(!q.isEmpty()) {
             Point curr = q.poll();
-            if(curr.num.equals(String.valueOf(B)) && ans>curr.cnt){
+            if(curr.num==B && ans>curr.cnt){
                 ans=curr.cnt;
             }
-            long[] move ={Long.parseLong(curr.num)*2,Long.parseLong(curr.num+1)};
+            long[] move ={curr.num*2,curr.num*10+1};
             for(int d=0;d<2;d++){
                 long moveNum=move[d];
                 if(isOut(moveNum)) continue;
-                q.offer(new Point(String.valueOf(moveNum),curr.cnt+1));
+                q.offer(new Point(moveNum,curr.cnt+1));
             }
         }
     }
