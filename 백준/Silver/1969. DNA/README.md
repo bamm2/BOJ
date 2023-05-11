@@ -1,14 +1,14 @@
-# [Silver V] DNA - 1969 
+# [Silver IV] DNA - 1969 
 
 [문제 링크](https://www.acmicpc.net/problem/1969) 
 
 ### 성능 요약
 
-메모리: 12284 KB, 시간: 92 ms
+메모리: 12184 KB, 시간: 92 ms
 
 ### 분류
 
-브루트포스 알고리즘(bruteforcing), 그리디 알고리즘(greedy), 구현(implementation), 문자열(string)
+브루트포스 알고리즘, 그리디 알고리즘, 구현, 문자열
 
 ### 문제 설명
 

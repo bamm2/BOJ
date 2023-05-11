@@ -5,51 +5,75 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+    static int[][] count;
 
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-		String[] arr = new String[N];
-		for (int i = 0; i < N; i++) {
-			arr[i] = br.readLine();
-		}
+        st=new StringTokenizer(br.readLine()," ");
 
-		String strans = "";
-		int ans = 0;
+        int N=Integer.parseInt(st.nextToken()); // DNA의 수
+        int M =Integer.parseInt(st.nextToken()); // 문자열의 길이
 
-		for (int i = 0; i < M; i++) { // 문자열의 문자 하나하나 비교
-			int[] AtoZ = new int[26];
-			int max = 0;
-			int maxidx = 0;
-			for (int j = 0; j < N; j++) { // 문자열 개수
-				AtoZ[arr[j].charAt(i) - 'A']++; // 0번부터 A가 채워짐
-			}
+        count =new int[4][M];
 
-			for (int k = 0; k < AtoZ.length; k++) {
-				if (max < AtoZ[k]) {
-					max = AtoZ[k]; // 가장 많은 값
-					maxidx = k; // 가장 많은 값의 인덱스 (0이면 +65해서 A로 만들어주기 위햄)
-				}
-			}
-			if (max == 1) { // max가 1이면 다 같은거니까
-				for (int k = 0; k < AtoZ.length; k++) { // 가장 작은 알파벳 찾아주기
-					if (AtoZ[k] != 0) { // 앞에서부터 1인 인덱스 찾아주기
-						strans += (char) (k + 65); // 문자열 만들어주기
-						ans += N - 1; // 개수보다 1 작은 수만큼 바꿔줘야 되니까
-						break;
-					}
-				}
-			} else { // max가 1 이상일 경우
-				strans += (char) (maxidx + 65); // 가장많은 값의 알파벳
-				ans += N - max; // 바꿔야하는 수
-				
-			}
+        for(int i=0;i<N;i++){
+            String s = br.readLine();
+            for(int j=0;j<s.length();j++){
+                char c = s.charAt(j);
+                counting(j,c);
+            }
+        }
 
-		}
-		System.out.println(strans);
-		System.out.println(ans);
-	}// main
+        int[] maxArr =new int[M]; // 인덱스 별 가장 많은 문자의 수
+
+        StringBuilder sb=new StringBuilder();
+
+        int sum = 0;
+
+        for(int i=0;i<M;i++){ // 문자열 길이
+            int max=0;
+            char c = ' ';
+            for(int j=3;j>=0;j--){ // A,C,G,T
+                if(count[j][i]>=max){
+                   max =count[j][i];
+                    c=itoc(j);
+                }
+            }
+            sum+=max;
+            sb.append(c);
+        }
+
+        sb.append('\n').append(N*M-sum);
+
+        System.out.println(sb.toString().trim());
+    }
+
+    private static void counting(int idx,char c ){
+        switch (c){
+            case 'A':
+                count[0][idx]++;
+                break;
+            case 'C':
+                count[1][idx]++;
+                break;
+            case 'G':
+                count[2][idx]++;
+                break;
+            case 'T':
+                count[3][idx]++;
+                break;
+        }
+    }
+    private static char itoc(int idx){
+        switch (idx){
+            case 0 : return 'A';
+            case 1 : return 'C';
+            case 2 : return 'G';
+            case 3 : return 'T';
+        }
+        return ' ';
+    }
+
 }
