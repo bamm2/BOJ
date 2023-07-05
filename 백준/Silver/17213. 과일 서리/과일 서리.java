@@ -12,19 +12,18 @@ public class Main {
         N=Integer.parseInt(br.readLine());
         M=Integer.parseInt(br.readLine());
 
-
-       comb(0,0);
+       solve(0,0);
 
         System.out.println(ans);
     }
-    private static void comb(int cnt, int start){
+    private static void solve(int cnt, int start){
         if(cnt==M-N){
             ans++;
             return;
         }
 
         for(int i=start;i<N;i++){
-            comb(cnt+1,i);
+            solve(cnt+1,i);
         }
 
     }
