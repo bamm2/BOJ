@@ -5,8 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N, map[][];
-    static long[][] dp;
+    static int N;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,34 +13,34 @@ public class Main {
 
         N =Integer.parseInt(br.readLine());
 
-        map =new int[N][N];
-        dp = new long[N][N];
+        int[][] map =new int[N][N];
+        long[][] dp = new long[N][N];
 
         for(int i=0;i<N;i++){
             st=new StringTokenizer(br.readLine()," ");
             for(int j=0;j<N;j++){
                 map[i][j]=Integer.parseInt(st.nextToken());
-                dp[i][j]=-1;
             }
         }
 
-        System.out.println( dfs(0,0) ) ;
-
-    }
-
-    private static long dfs(int r,int c){
-        if(r==N-1 && c==N-1){
-            return 1;
+        int move = map[0][0];
+        if(move<N) {
+            dp[0][move]++;
+            dp[move][0]++;
         }
 
-        if(dp[r][c]!=-1) return dp[r][c];
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                if(map[i][j]==0) continue;
+                if(dp[i][j]>0){
+                    move = map[i][j];
+                    if(!isOut(move+i,j)) dp[move+i][j]+=dp[i][j];
+                    if(!isOut(i,move+j)) dp[i][move+j]+=dp[i][j];
+                }
+            }
+        }
 
-        dp[r][c]=0;
-        
-        if(!isOut(r+map[r][c],c)) dp[r][c]+=dfs(r+map[r][c],c);
-        if(!isOut(r,c+map[r][c])) dp[r][c]+=dfs(r,c+map[r][c]);
-
-        return dp[r][c];
+        System.out.println(dp[N-1][N-1]);
     }
 
     private static boolean isOut(long r,long c){
