@@ -1,29 +1,25 @@
-import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 class Solution {
     
     public int solution(int k, int[] tangerine) {
         int answer = 0;
         
-        int max = 0;
-        for(int i=0;i<tangerine.length;i++){
-            int num = tangerine[i];
-            max=max>num?max:num;
+        Map<Integer,Integer> map =new HashMap<>();
+        
+        for(int num : tangerine){
+            map.put(num,map.getOrDefault(num,0)+1);
         }
         
-        int[] counting =new int[max+1];
+        List<Integer> list =new ArrayList<>(map.keySet());        
+        list.sort((a,b)->map.get(b)-map.get(a));
         
-        for(int i=0;i<tangerine.length;i++){
-            int num = tangerine[i];
-            counting[num]++;
-        }
-        
-        Arrays.sort(counting);
-        
-        for(int i=max;i>0;i--){
-            int cnt = counting[i];
-            k-=cnt;
+        for(Integer num : list){
             answer++;
+            k-=map.get(num);
             if(k<=0) break;
         }
         
