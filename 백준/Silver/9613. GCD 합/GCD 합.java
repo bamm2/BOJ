@@ -24,12 +24,10 @@ public class Main {
                 arr[i]=Integer.parseInt(st.nextToken());
             }
 
-            Arrays.sort(arr);
-
             long  sum =0 ;
             for(int i=0;i<N-1;i++){
                 for(int j=i+1;j<N;j++){
-                   sum+=GCD(arr[j],arr[i]);
+                   sum+=GCD(arr[i],arr[j]);
                 }
             }
 
@@ -41,10 +39,7 @@ public class Main {
     }
 
     private static int GCD(int a ,int b){
-        if(a%b==0) {
-            return b;
-        }
-
+        if(a%b==0) return b;
         return GCD(b,a%b);
     }
 
