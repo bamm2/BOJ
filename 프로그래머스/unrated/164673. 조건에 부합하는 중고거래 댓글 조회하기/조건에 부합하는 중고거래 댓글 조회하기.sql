@@ -1,6 +1,5 @@
--- 코드를 입력하세요
-SELECT A.TITLE , A.BOARD_ID, B.REPLY_ID,B.WRITER_ID, B.CONTENTS,date_format(B.CREATED_DATE,'%Y-%m-%d') as CREATED_DATE
-FROM USED_GOODS_BOARD as A INNER JOIN USED_GOODS_REPLY as B
-ON A.BOARD_ID = B.BOARD_ID
-WHERE YEAR(A.CREATED_DATE)='2022' AND MONTH(A.CREATED_DATE)='10'
-ORDER BY B.CREATED_DATE,A.TITLE;
+select A.title,A.board_id,B.reply_id,B.writer_id,B.contents,
+    DATE_FORMAT(B.created_date,"%Y-%m-%d") as CREATED_DATE
+from used_goods_board A join used_goods_reply B using(board_id)
+where DATE_FORMAT(A.created_date,"%Y-%m")='2022-10'
+order by 6 , 1 ;
