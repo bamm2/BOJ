@@ -1,27 +1,33 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Main {
 
-    static int N;
-    static int[] arr;
-    public static void main(String[] args) {
-        Scanner sc=new Scanner(System.in);
-        int t=sc.nextInt();
-        for(int tc=1; tc<=t; tc++) {
-            N=sc.nextInt();
-            arr=new int[N+1];//0잠김 1열림
-            for(int i=1; i<=N; i++) {
-                for(int j=1; i*j<=N; j++) {
-                    if(arr[i*j]!=0) arr[i*j]=0;
-                    else  arr[i*j]=1;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb =new StringBuilder();
+
+        int T =Integer.parseInt(br.readLine());
+        while(T-->0){
+            int N =Integer.parseInt(br.readLine());
+            boolean[] visited= new boolean[N+1];
+            for(int i=2;i<=N;i++){
+                for(int j=i;j<=N;j+=i){
+                    if(!visited[j]) visited[j]=true;
+                    else visited[j]=false;
                 }
             }
-            int ans=0;
-            for(int i=1; i<=N; i++) {
-                ans+=arr[i];
+            int sum = 0;
+            for(int i=1;i<=N;i++){
+                if(!visited[i]) sum++;
             }
-            System.out.println(ans);
-        }
-    }
 
+            sb.append(sum).append('\n');
+        }
+
+        System.out.println(sb);
+
+    }
 }
