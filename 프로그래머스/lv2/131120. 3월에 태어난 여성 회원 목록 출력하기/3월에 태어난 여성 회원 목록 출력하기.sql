@@ -1,5 +1,4 @@
--- 코드를 입력하세요
-SELECT MEMBER_ID,MEMBER_NAME,GENDER,SUBSTR(DATE_OF_BIRTH,1,10) AS DATE_OF_BIRTH
-FROM MEMBER_PROFILE
-WHERE SUBSTR(DATE_OF_BIRTH,6,2) = '03' AND TLNO IS NOT NULL AND GENDER = 'W'
-ORDER BY MEMBER_ID;
+select member_id,member_name,gender,date_format(date_of_birth,"%Y-%m-%d") as date_of_birth
+from member_profile
+where month(date_of_birth)=3 and gender='W' and tlno is not null
+order by 1 ;
