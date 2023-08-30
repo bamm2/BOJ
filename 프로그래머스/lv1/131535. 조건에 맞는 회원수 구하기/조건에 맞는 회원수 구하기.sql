@@ -1,4 +1,3 @@
--- 코드를 입력하세요
-SELECT COUNT(USER_ID)
-FROM USER_INFO
-WHERE YEAR(JOINED)='2021' AND AGE BETWEEN '20' AND '29'
+select count(user_id)
+from user_info
+where extract(year from joined)='2021' AND AGE BETWEEN 20 AND 29 ;
