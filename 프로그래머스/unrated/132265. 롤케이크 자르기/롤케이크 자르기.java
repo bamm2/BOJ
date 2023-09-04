@@ -1,26 +1,28 @@
-import java.util.HashSet;
-
 class Solution {
     public int solution(int[] topping) {
         int size =topping.length-1;
 
             int[] left =new int[size+1];
             int[] right =new int[size+1];
-            HashSet<Integer> leftHashSet = new HashSet<>();
-            HashSet<Integer> rightHashSet = new HashSet<>();
+            boolean[] leftVisited = new boolean[size+2];
+            boolean[] rightVisited = new boolean[size+2];
+            int leftCnt=0;
+            int rightCnt=0;
 
             for(int i=0;i<topping.length;i++){
                 int leftNumber = topping[i];
                 int rightNumber = topping[size-i];
-                if(!leftHashSet.contains(leftNumber)){
-                    leftHashSet.add(leftNumber);
+                if(!leftVisited[leftNumber]){
+                    leftVisited[leftNumber]=true;
+                    leftCnt++;
                 }
-                left[i]=leftHashSet.size();
+                left[i]=leftCnt;
 
-                if(!rightHashSet.contains(rightNumber)){
-                    rightHashSet.add(rightNumber);
+                if(!rightVisited[rightNumber]){
+                    rightVisited[rightNumber]=true;
+                    rightCnt++;
                 }
-                right[size-i]=rightHashSet.size();
+                right[size-i]=rightCnt;
             }
 
             int ans =0;
