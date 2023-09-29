@@ -5,68 +5,74 @@ import java.util.*;
 
 public class Main {
 
-    static int N,K,rArr[],cArr[];
-    static class Point{
+    static int N,K;
+    static class Pos{
         int r,c;
-        Point(int r,int c) {
-            this.r = r;
-            this.c = c;
+        Pos(int r,int c){
+            this.r=r;
+            this.c=c;
         }
     }
-    static Point[] goals;
+    static Pos[] destPosArr;
+    static int[] r_Arr,c_Arr;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
+        StringTokenizer st=new StringTokenizer(br.readLine()," ");
 
-        st = new StringTokenizer(br.readLine(), " ");
-        N = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
-        rArr = new int[K];
-        cArr = new int[K];
-        goals = new Point[K];
-        for (int i = 0; i < K; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
-            int num = Integer.parseInt(st.nextToken()); // 이동 시키려는 숫자
-            int r = Integer.parseInt(st.nextToken()) - 1; // 목표 r
-            int c = Integer.parseInt(st.nextToken()) - 1; // 목표 c
-            goals[i] = new Point(r,c);
+        N =Integer.parseInt(st.nextToken());
+        K =Integer.parseInt(st.nextToken());
 
-            int curR = (num - 1) / N;
-            int curC = (num - 1) % N;
-            rArr[i] = curR;
-            cArr[i] = curC;
+        destPosArr=new Pos[K];
+        r_Arr=new int[K];
+        c_Arr=new int[K];
+
+        for(int i=0;i<K;i++){
+            st=new StringTokenizer(br.readLine()," ");
+            int number = Integer.parseInt(st.nextToken());
+            int destR = Integer.parseInt(st.nextToken())-1;
+            int destC = Integer.parseInt(st.nextToken())-1;
+            destPosArr[i]=new Pos(destR,destC);
+            r_Arr[i] = (number-1)/N;
+            c_Arr[i] = (number-1)%N;
         }
 
         for(int i=0;i<K;i++){
-            int moveR = goals[i].r-rArr[i];
-            int moveC = goals[i].c-cArr[i];
+            int moveR,moveC;
+            if(destPosArr[i].r>=r_Arr[i]){
+                moveR=destPosArr[i].r-r_Arr[i];
+            }else{
+                moveR=N-r_Arr[i]+destPosArr[i].r;
+            }
 
-            if(moveR<0) moveR+=N;
-            if(moveC<0) moveC+=N;
+            if(destPosArr[i].c>=c_Arr[i]){
+                moveC=destPosArr[i].c-c_Arr[i];
+            }else{
+                moveC=N-c_Arr[i]+destPosArr[i].c;
+            }
 
-            moveRight(rArr[i],moveC);
-            moveDown(cArr[i],moveR);
-
+            moveCol(r_Arr[i],moveC);
+            moveRow(c_Arr[i],moveR);
             sb.append(moveR+moveC).append('\n');
         }
+
         System.out.println(sb);
+    }
 
-    }
-    private static void moveRight(int r,int move){
+    private static void moveCol(int r, int moveC) {
         for(int i=0;i<K;i++){
-            if(rArr[i]==r){
-                cArr[i]= (cArr[i]+move)%N;
-            }
-        }
-    }
-    private static void moveDown(int c,int move){
-        for(int i=0;i<K;i++){
-            if(cArr[i]==c){
-                rArr[i]= (rArr[i]+move)%N;
+            if(r_Arr[i]==r){
+                c_Arr[i]= (c_Arr[i]+moveC)%N;
             }
         }
     }
 
+    private static void moveRow(int c, int moveR) {
+        for(int i=0;i<K;i++){
+            if(c_Arr[i]==c){
+                r_Arr[i]= (r_Arr[i]+moveR)%N;
+            }
+        }
+    }
 }
