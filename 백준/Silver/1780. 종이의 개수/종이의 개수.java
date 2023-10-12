@@ -29,7 +29,9 @@ public class Main {
 
         solve(0,0,N);
 
-        Arrays.stream(ans).forEach(i->sb.append(i).append('\n'));
+        for(Integer cnt : ans){
+            sb.append(cnt).append('\n');
+        }
 
         System.out.println(sb);
     }
@@ -40,14 +42,14 @@ public class Main {
             ans[map[r][c]+1]++;
             return;
         }
-        
+
         int size=range/3;
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
                 solve(r+i*size,c+j*size,size);
             }
         }
-        
+
     }
 
     private static boolean isOk(int r,int c,int range){
