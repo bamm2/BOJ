@@ -6,75 +6,63 @@ import java.util.*;
 
 public class Main {
 
-    static int N;
-    static int[] parent;
-    static class Edge implements Comparable<Edge>{
+    static int V;
+    static boolean[] visited;
+    static List<Point>[] list;
+    static class Point implements Comparable<Point>{
         int from,to,weight;
-        Edge(int from,int to,int weight){
+        Point(int from,int to,int weight){
             this.from=from;
             this.to=to;
             this.weight=weight;
         }
 
         @Override
-        public int compareTo(Edge o) {
-            return Integer.compare(this.weight,o.weight);
+        public int compareTo(Point o) {
+            return  Integer.compare(this.weight,o.weight);
         }
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st ;
+        StringTokenizer st;
 
-        N=Integer.parseInt(br.readLine());
-        List<Edge> list =new ArrayList<>();
 
-        int num;
-        for(int i=0;i<N;i++){
+        V=Integer.parseInt(br.readLine());
+        list=new ArrayList[V];
+        visited=new boolean[V];
+        for(int i=0;i<V;i++){
+            list[i]=new ArrayList<>();
+        }
+
+        for(int i=0;i<V;i++){
             st=new StringTokenizer(br.readLine()," ");
-            for(int j=0;j<N;j++){
-                num=Integer.parseInt(st.nextToken());
-                list.add(new Edge(i,j,num));
+            for(int j=0;j<V;j++){
+                int w = Integer.parseInt(st.nextToken());
+                if(i!=j) list[i].add(new Point(i,j,w));
             }
         }
 
-        make();
-        Collections.sort(list);
+        PriorityQueue<Point> pq =new PriorityQueue<>();
 
-        int check = 0;
-        long sum = 0;
-        for(Edge edge : list){
-            if(union(edge.from,edge.to)){
-                sum+=edge.weight;
-                if(++check==N-1) break;
-            }
+        pq.addAll(list[0]);
+        visited[0]=true;
+
+        int count = 1;
+        long sum =0;
+        while (count!=V){
+            Point curr = pq.poll();
+
+            if(visited[curr.to]) continue;
+            visited[curr.to]=true;
+
+            sum+=curr.weight;
+            pq.addAll(list[curr.to]);
+            count++;
         }
 
         System.out.println(sum);
 
+
     }
-
-    private static void make(){
-        parent=new int[N];
-
-        for(int i=0;i<N;i++){
-            parent[i]=i;
-        }
-    }
-
-    private static int find(int a){
-        if(parent[a] == a) return a;
-        return parent[a]=find(parent[a]);
-    }
-
-    private static boolean union(int a , int b){
-        int aRoot = find(a);
-        int bRoot = find(b);
-        if(aRoot == bRoot) return false;
-
-        parent[bRoot]=aRoot;
-        return true;
-    }
-
-
 }
