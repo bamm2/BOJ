@@ -18,6 +18,7 @@ public class Main {
     static int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // 상하좌우
     static boolean[][] airVisited, visited;
     static int map[][], R, C;
+    static int count;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -33,12 +34,13 @@ public class Main {
             st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < C; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
+                if(map[i][j]==1) count++;
             }
         }
 
         int time = 0;
 
-        while (countCheese()!=0) {
+        while (count!=0) {
             time++;
             innerAirCheck();
             removeCheese();
@@ -47,8 +49,26 @@ public class Main {
         System.out.println(time);
 
     }
+    
+    private static void innerAirCheck() {
+        airVisited = new boolean[R][C];
+        airVisited[0][0] = true;
+        Queue<Point> q = new ArrayDeque<>();
+        q.offer(new Point(0,0));
 
-    private static void removeCheese() {
+        while (!q.isEmpty()) {
+            Point curr = q.poll();
+            for (int d = 0; d < 4; d++) {
+                int nr = curr.r + dir[d][0];
+                int nc = curr.c + dir[d][1];
+                if (isOut(nr, nc) || airVisited[nr][nc] || map[nr][nc]==1) continue;
+                airVisited[nr][nc] = true;
+                q.offer(new Point(nr, nc));
+            }
+        }
+    }
+ 
+      private static void removeCheese() {
         visited = new boolean[R][C];
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
@@ -77,55 +97,11 @@ public class Main {
                     q.offer(new Point(nr,nc));
                 }
             }
-            if(cnt>=2) map[curr.r][curr.c]=0;
-        }
-    }
-
-    private static void innerAirCheck() {
-        airVisited = new boolean[R][C];
-        for (int i = 0; i < R; i++) {
-            if (!airVisited[i][0] && map[i][0]==0) {
-                mapSearch(i, 0);
-            }
-            if (!airVisited[i][C - 1] && map[i][C - 1]==0) {
-                mapSearch(i, C - 1);
+            if(cnt>=2){
+                map[curr.r][curr.c]=0;
+                count--;
             }
         }
-        for (int i = 0; i < C; i++) {
-            if (!airVisited[0][i] && map[0][i]==0) {
-                mapSearch(0, i);
-            }
-            if (!airVisited[R - 1][i] && map[R - 1][i]==0) {
-                mapSearch(R - 1, i);
-            }
-        }
-    }
-
-    private static void mapSearch(int r, int c) {
-        airVisited[r][c] = true;
-        Queue<Point> q = new ArrayDeque<>();
-        q.offer(new Point(r, c));
-
-        while (!q.isEmpty()) {
-            Point curr = q.poll();
-            for (int d = 0; d < 4; d++) {
-                int nr = curr.r + dir[d][0];
-                int nc = curr.c + dir[d][1];
-                if (isOut(nr, nc) || airVisited[nr][nc] || map[nr][nc]==1) continue;
-                airVisited[nr][nc] = true;
-                q.offer(new Point(nr, nc));
-            }
-        }
-    }
-
-    private static int countCheese() {
-        int count = 0;
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (map[i][j]==1) count++;
-            }
-        }
-        return count;
     }
 
     private static boolean isOut(int r, int c) {
