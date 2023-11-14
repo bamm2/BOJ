@@ -20,6 +20,7 @@ public class Main {
         V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
 
+        visited = new boolean[V];
         connects = new List[V];
         for (int i = 0; i < V; i++) {
             connects[i] = new ArrayList<>();
@@ -34,9 +35,9 @@ public class Main {
         }
 
         for (int i = 0; i < V; i++) {
-            visited = new boolean[V];
             visited[i]=true;
             dfs(i, 0);
+            visited[i]=false;
         }
 
         System.out.println(flag ? 1:0);
