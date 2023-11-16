@@ -23,7 +23,7 @@ public class Main {
             for (int i = 0; i < N; i++) {
                 arr[i] = st.nextToken();
             }
-
+            if(N>=33) min = 0;
             loop:
             for(int i=0;i<N;i++){
                 for(int j=i+1;j<N;j++){
