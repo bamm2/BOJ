@@ -9,8 +9,8 @@ public class Main {
 
     static int N, K, count;
     static long sum;
+    static boolean[] visited;
     static Queue<Integer> q = new ArrayDeque<>();
-    static HashSet<Integer> hs =new HashSet<>();
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,11 +20,13 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
 
+        visited=new boolean[400_000_001];
+
         st = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < N; i++) {
             int num = Integer.parseInt(st.nextToken());
-            q.offer(num);
-            hs.add(num);
+            q.offer(num + 200_000_000);
+            visited[num + 200_000_000]= true;
         }
 
         bfs();
@@ -41,12 +43,12 @@ public class Main {
                 int curr = q.poll();
                 int[] next = {curr + 1, curr - 1};
                 for (int i = 0; i < next.length; i++) {
-                    if(hs.contains(next[i])) continue;
+                    if(visited[next[i]]) continue;
+                    visited[next[i]] = true;
                     q.offer(next[i]);
-                    hs.add(next[i]);
                     sum += distance;
                     count++;
-                    if(hs.size() == K+N) return;
+                    if(count == K) return;
                 }
             }
         }
