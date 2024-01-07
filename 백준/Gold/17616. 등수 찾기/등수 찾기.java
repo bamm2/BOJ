@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 public class Main {
 
     static int V, E, find;
-    static List<Integer>[] list; // 번호보다 낮은 순위 모아 놓음
+    static List<Integer>[] list,reverseList;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,8 +26,10 @@ public class Main {
         find = Integer.parseInt(st.nextToken()) - 1;
 
         list = new ArrayList[V];
+        reverseList = new ArrayList[V];
         for (int i = 0; i < V; i++) {
             list[i] = new ArrayList<>();
+            reverseList[i]=new ArrayList<>();
         }
 
         for (int i = 0; i < E; i++) {
@@ -35,6 +37,7 @@ public class Main {
             int v = Integer.parseInt(st.nextToken()) - 1;
             int smaller = Integer.parseInt(st.nextToken()) - 1;
             list[v].add(smaller);
+            reverseList[smaller].add(v);
         }
 
         boolean[] visited = new boolean[V];
@@ -53,20 +56,15 @@ public class Main {
             }
         }
 
-        int over =0 ;
-        for (int i = 0; i < V; i++) {
-            if (visited[i]) continue;
-            if (list[i].contains(find)) {
+        int over =0;
+        q.offer(find);
+        while (!q.isEmpty()){
+            Integer curr = q.poll();
+            for(Integer next: reverseList[curr]){
+                if(visited[next]) continue;;
+                visited[next]=true;
                 over++;
-                while (!q.isEmpty()) {
-                    Integer curr = q.poll();
-                    for(int next: list[curr] ){
-                        if(visited[next]) continue;
-                        visited[next]=true;
-                        q.offer(next);
-                        over++;
-                    }
-                }
+                q.offer(next);
             }
         }
 
