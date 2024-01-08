@@ -10,21 +10,13 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static class Point implements Comparable<Point> {
+    static class Point{
         int from, to, cost;
 
         public Point(int from, int to, int cost) {
             this.from = from;
             this.to = to;
             this.cost = cost;
-        }
-
-        @Override
-        public int compareTo(Point o) {
-            if (this.from==o.from) {
-                return Integer.compare(this.to, o.to); // 시작 위치가 동일하다면 도착 위치가 가까운 순서로 나열
-            } // 시작 위치 작은 순서로 나열
-            return Integer.compare(this.from, o.from);
         }
     }
 
@@ -51,8 +43,6 @@ public class Main {
         for (int i = 0; i < dist.length; i++) {
             dist[i] = i;
         }
-
-        Collections.sort(list);
 
         for (int i = 0; i < D; i++) {
             dist[i + 1] = Math.min(dist[i + 1], dist[i] + 1); // 지름길로 이미 최소값을 구해져 있는 경우 vs 현재의 최소값 +1
