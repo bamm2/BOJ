@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 public class Main {
 
     static int[][] dir = {{-1, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}}; // 상 하 좌 우 위 아래
-
+    static int[][][] testMap =new int[5][5][5];
     static class Point {
         int r, c, floor, cnt;
 
@@ -59,6 +59,7 @@ public class Main {
 
     private static void perm(int idx, int flag) {
         if (idx==5) {
+            if(ans==12) return;
             makeTurntable(0); // 층별로 회전 시켜보면서 최소 찾기
             return;
         }
@@ -72,21 +73,13 @@ public class Main {
 
     private static void makeTurntable(int idx) {
         if (idx==5) { // 층별로 회전 !
-            int[][][] testMap = new int[5][5][5];
+            if(ans==12) return;
             for (int i = 0; i < 5; i++) {
                 int floor = floors[i];
-                int[][] turnedFloor = turn(map.get(floor), turnTable[i]);
-                for (int a = 0; a < 5; a++) {
-                    for (int b = 0; b < 5; b++) {
-                        testMap[i][a][b] = turnedFloor[a][b];
-                    }
-                }
+                turn(map.get(floor), turnTable[i],i);
             }
 
             bfs(0, 0, 4, 4, testMap);
-            bfs(0, 4, 4, 0, testMap);
-            bfs(4, 0, 0, 4, testMap);
-            bfs(4, 4, 0, 0, testMap);
 
             return;
         }
@@ -122,39 +115,37 @@ public class Main {
         }
     }
 
-    private static int[][] turn(int[][] floor, int turn) { // 0 제자리 , 1 오른쪽 한번 회전 ,2 오른쪽 2번 회전 , 3 오른쪽 3번 회전
-        int[][] copy = new int[5][5];
+    private static void turn(int[][] floor, int turn,int f) { // 0 제자리 , 1 오른쪽 한번 회전 ,2 오른쪽 2번 회전 , 3 오른쪽 3번 회전
         switch (turn) {
             case 0: // 제자리
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        copy[i][j] = floor[i][j];
+                        testMap[i][j][f] = floor[i][j];
                     }
                 }
-                return copy;
+                break;
             case 1: // 시계방향 90도 회전
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        copy[i][j] = floor[4 - j][i];
+                        testMap[i][j][f] = floor[4 - j][i];
                     }
                 }
-                return copy;
+                break;
             case 2: // 시계방향 180도 회전
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        copy[i][j] = floor[4 - i][4 - j];
+                        testMap[i][j][f] = floor[4 - i][4 - j];
                     }
                 }
-                return copy;
+                break;
             case 3: // 시계방향 270도 회전
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        copy[i][j] = floor[j][4 - i];
+                        testMap[i][j][f] = floor[j][4 - i];
                     }
                 }
-                return copy;
+                break;
         }
-        return null;
     }
 
     private static boolean isOut(int r, int c, int floor) {
