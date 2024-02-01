@@ -25,7 +25,14 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        solve(0, 0, 0);
+        for(int i=0;i<(1<<N);i++){
+            int sum =0;
+            for(int j=0;j<N;j++){
+                if((i & (1<<j))!=0) continue;
+                sum+=arr[j];
+            }
+            hs.add(sum);
+        }
 
         int ans;
         for (int i = 1; ; i++) {
@@ -40,14 +47,5 @@ public class Main {
         bw.close();
         br.close();
 
-    }
-
-    private static void solve(int idx, int sum, int flag) {
-        hs.add(sum);
-        if (idx==N) return;
-
-        if ((flag & 1 << idx)!=0) return;
-        solve(idx + 1, sum + arr[idx], flag | (1 << idx));
-        solve(idx + 1, sum, flag);
     }
 }
