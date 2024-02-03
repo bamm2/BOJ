@@ -42,10 +42,16 @@ public class Main {
             findCircle(i, i, i);
         }
 
+        Queue<Integer> q = new ArrayDeque<>();
+        boolean[] visit = new boolean[N + 1];
         for (int i = 1; i <= N; i++) {
-            if (visited[i]) continue;
-            ans[i] = bfs(i);
+            if (visited[i]) {
+                q.offer(i);
+                visit[i] = true;
+            }
         }
+
+        bfs(q, visit);
 
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= N; i++) {
@@ -58,11 +64,7 @@ public class Main {
         br.close();
     }
 
-    private static int bfs(int v) {
-        Queue<Integer> q = new ArrayDeque<>();
-        boolean[] visit = new boolean[N + 1];
-        q.offer(v);
-        visit[v] = true;
+    private static void bfs(Queue<Integer> q, boolean[] visit) {
         int cnt = 0;
         while (!q.isEmpty()) {
             int size = q.size();
@@ -71,13 +73,12 @@ public class Main {
                 Integer curr = q.poll();
                 for (Integer next : connection[curr]) {
                     if (visit[next]) continue;
-                    if (visited[next]) return cnt; // 순환되는 정점에 도달했으면
-                    q.offer(next);
                     visit[next] = true;
+                    ans[next] = cnt;
+                    q.offer(next);
                 }
             }
         }
-        return -1;
     }
 
     private static void findCircle(int v, int prev, int start) {
