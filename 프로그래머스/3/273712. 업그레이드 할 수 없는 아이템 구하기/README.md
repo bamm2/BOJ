@@ -1,6 +1,6 @@
 # [level 3] 업그레이드 할 수 없는 아이템 구하기 - 273712 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/273712) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/273712#qna) 
 
 ### 성능 요약
 
@@ -12,11 +12,11 @@
 
 ### 채점결과
 
-합계: 65.0 / 100.0
+합계: 100.0 / 100.0
 
 ### 제출 일자
 
-2024년 03월 02일 08:24:43
+2024년 03월 02일 08:35:27
 
 ### 문제 설명
 
