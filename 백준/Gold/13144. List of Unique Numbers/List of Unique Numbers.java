@@ -7,8 +7,7 @@ import java.util.StringTokenizer;
 public class Main {
 
     static int N;
-    static int[] arr, idxArr;
-    static long[] dp;
+    static int[] arr, idxArr,dp;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,8 +16,7 @@ public class Main {
         N = Integer.parseInt(br.readLine());
         arr = new int[N + 1];
         idxArr = new int[100_001];
-        Arrays.fill(idxArr, -1);
-        dp = new long[N + 1];
+        dp = new int[N + 1];
 
         st = new StringTokenizer(br.readLine(), " ");
         for (int i = 1; i <= N; i++) {
@@ -28,7 +26,7 @@ public class Main {
         long sum = 0;
         for (int i = 1; i <= N; ++i) {
             int curr = arr[i];
-            if (idxArr[curr]==-1) {
+            if (idxArr[curr]==0) {
                 idxArr[curr] = i;
                 dp[i] = dp[i - 1] + 1;
             } else {
