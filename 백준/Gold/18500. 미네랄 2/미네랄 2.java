@@ -26,9 +26,7 @@ public class Main {
 
         for (int i = 0; i < R; i++) {
             char[] arr = br.readLine().toCharArray();
-            for (int j = 0; j < C; j++) {
-                map[i][j] = arr[j];
-            }
+            System.arraycopy(arr, 0, map[i], 0, C);
         }
 
         int T = Integer.parseInt(br.readLine());
@@ -90,21 +88,11 @@ public class Main {
         if (isLeft) direction = new int[][]{{-1, 0}, {0, 1}, {1, 0}}; // 왼쪽 출발
         else direction = new int[][]{{-1, 0}, {0, -1}, {1, 0}};  // 오른쪽 출발
 
-        // 위 체크
-        int upR = r + direction[0][0];
-        int upC = c + direction[0][1];
-        bfs(upR, upC);
-
-        // 옆 체크
-        int sideR = r + direction[1][0];
-        int sideC = c + direction[1][1];
-        bfs(sideR, sideC);
-
-        // 아래 체크
-        int bottomR = r + direction[2][0];
-        int bottomC = c + direction[2][1];
-        bfs(bottomR, bottomC);
-
+        for(int d=0;d<3;d++){
+            int nr = r+direction[d][0];
+            int nc = c+direction[d][1];
+            bfs(nr,nc);
+        }
     }
 
     private static void bfs(int r, int c) {
