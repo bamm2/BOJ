@@ -3,49 +3,42 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-
 public class Main {
-    static int[][] taste;
-    static int N,min,sour,bitter,none;
-    static boolean[] isSelected;
+
+    static int[][] map;
+    static int N, min;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st ;
+        StringTokenizer st;
 
-        N=Integer.parseInt(br.readLine());
-        taste = new int[N][2];
-        isSelected= new boolean[N];
-        min =Integer.MAX_VALUE;
-        for(int i=0;i<N;i++){
-            st= new StringTokenizer(br.readLine()," ");
-            taste[i][0]=Integer.parseInt(st.nextToken()); // 신맛
-            taste[i][1]=Integer.parseInt(st.nextToken()); // 쓴맛
+        N = Integer.parseInt(br.readLine());
+        map = new int[N][2];
+
+        min = Integer.MAX_VALUE;
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            map[i][0] = Integer.parseInt(st.nextToken());
+            map[i][1] = Integer.parseInt(st.nextToken());
+            min = Math.min(min, Math.abs(map[i][0] - map[i][1]));
         }
-        solve(0);
+
+        for (int i = 2; i <= N; i++) {
+            solve(0, 0, 1, 0, i);
+        }
+
         System.out.println(min);
+        br.close();
     }
 
-    private static void solve(int cnt){
-        if(cnt==N) {
-            sour=1;
-            bitter=0;
-            none=0;
-            for (int i = 0; i < N; i++) {
-                if(isSelected[i]) {
-                    sour *= taste[i][0];
-                    bitter += taste[i][1];
-                }else{
-                    none++;
-                }
-            }
-            if (none==N) return;
-            min=Math.min(min,Math.abs(sour-bitter));
+    private static void solve(int cnt, int start, int sSum, int bSum, int goal) {
+        if (goal==cnt) {
+            min = Math.min(min, Math.abs(sSum - bSum));
             return;
         }
-            isSelected[cnt]=true;
-            solve(cnt+1);
-            isSelected[cnt]=false;
-            solve(cnt+1);
-    }
 
+        for (int i = start; i < N; i++) {
+            solve(cnt + 1, i + 1, map[i][0] * sSum, map[i][1] + bSum, goal);
+        }
+    }
 }
