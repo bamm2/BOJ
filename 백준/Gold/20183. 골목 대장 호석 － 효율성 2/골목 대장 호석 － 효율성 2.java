@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
@@ -49,22 +49,25 @@ public class Main {
             list[to].add(new Node(from, cost, cost));
         }
 
-        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o.maxCost));
+        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> o1.maxCost==o2.maxCost
+                ? Long.compare(o1.sum, o2.sum)
+                :Integer.compare(o1.maxCost, o2.maxCost));
 
         pq.addAll(list[start]);
 
-        boolean[] visited = new boolean[V + 1];
-        visited[start] = true;
+        int[] dist = new int[V + 1];
+        Arrays.fill(dist, Integer.MAX_VALUE);
 
         while (!pq.isEmpty()) {
             Node curr = pq.poll();
+            if (dist[curr.v] <= curr.maxCost) continue;
+            dist[curr.v] = curr.maxCost;
             if (curr.v==end) {
                 System.out.println(curr.maxCost);
                 return;
             }
             for (Node next : list[curr.v]) {
-                if (visited[next.v] || money < curr.sum + next.maxCost) continue;
-                visited[next.v] = true;
+                if (dist[next.v] <= curr.maxCost || money < curr.sum + next.maxCost) continue;
                 int compCost = Math.max(curr.maxCost, next.maxCost);
                 long sum = curr.sum + next.maxCost;
                 pq.offer(new Node(next.v, compCost, sum));
