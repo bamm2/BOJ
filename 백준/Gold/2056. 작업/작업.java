@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -41,9 +40,11 @@ public class Main {
 
         Queue<Integer> q = new ArrayDeque<>();
 
+        int ans = 0;
         for (int i = 1; i <= N; i++) {
             if (inOrders[i]==0) {
                 sum[i] = times[i];
+                ans = Math.max(sum[i], ans);
                 q.offer(i);
             }
         }
@@ -53,13 +54,12 @@ public class Main {
             for (Integer next : list[curr]) {
                 inOrders[next]--;
                 sum[next] = Math.max(sum[next], sum[curr] + times[next]);
+                ans = Math.max(sum[next], ans);
                 if (inOrders[next]==0) {
                     q.offer(next);
                 }
             }
         }
-
-        int ans = Arrays.stream(sum).max().getAsInt();
 
         System.out.println(ans);
         br.close();
