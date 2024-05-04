@@ -1,28 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    static class Point {
-        int idxOne, idxTwo;
-        int sum;
-
-        public Point(int idxOne, int idxTwo, int sum) {
-            this.idxOne = idxOne;
-            this.idxTwo = idxTwo;
-            this.sum = sum;
-        }
-
-        boolean contains(int compIdxOne, int compIdxTwo) {
-            return idxOne==compIdxOne || idxOne==compIdxTwo || idxTwo==compIdxOne || idxTwo==compIdxTwo;
-        }
-    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,32 +20,30 @@ public class Main {
 
         Arrays.sort(arr);
 
-        List<Point> list = new ArrayList<>();
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (i==j) continue;
-                int sum = arr[i] + arr[j];
-                list.add(new Point(i, j, sum));
-            }
-        }
-
-        list.sort((Comparator.comparingInt(o -> o.sum)));
-
-        int left = 0;
-        int right = 0;
         int minDiff = Integer.MAX_VALUE;
-        while (right < list.size()) {
-            Point L = list.get(left);
-            Point R = list.get(right);
 
-            if (left==right) right++;
-            else left++;
+        loop:
+        for (int i = 0; i < N - 3; i++) {
+            for (int j = i + 3; j < N; j++) {
+                int sum = arr[i] + arr[j];
+                int L = i + 1;
+                int R = j - 1;
+                int comp = arr[L] + arr[R];
+                minDiff = Math.min(minDiff, Math.abs(comp - sum));
 
-            if (R.contains(L.idxOne, L.idxTwo)) continue;
-
-            minDiff = Math.min(R.sum - L.sum, minDiff);
-            if (minDiff==0L) break;
+                while (L < R) {
+                    if (sum < comp) {
+                        comp = arr[L] + arr[--R];
+                        minDiff = Math.min(minDiff, Math.abs(comp - sum));
+                    } else if (sum > comp) {
+                        comp = arr[++L] + arr[R];
+                        minDiff = Math.min(minDiff, Math.abs(comp - sum));
+                    } else {
+                        minDiff = 0;
+                        break loop;
+                    }
+                }
+            }
         }
 
         System.out.println(minDiff);
