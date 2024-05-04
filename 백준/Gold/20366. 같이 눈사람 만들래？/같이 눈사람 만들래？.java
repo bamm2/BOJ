@@ -11,9 +11,9 @@ public class Main {
 
     static class Point {
         int idxOne, idxTwo;
-        long sum;
+        int sum;
 
-        public Point(int idxOne, int idxTwo, long sum) {
+        public Point(int idxOne, int idxTwo, int sum) {
             this.idxOne = idxOne;
             this.idxTwo = idxTwo;
             this.sum = sum;
@@ -43,16 +43,16 @@ public class Main {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (i==j) continue;
-                long sum = (long) arr[i] + arr[j];
+                int sum = arr[i] + arr[j];
                 list.add(new Point(i, j, sum));
             }
         }
 
-        list.sort((Comparator.comparingLong(o -> o.sum)));
+        list.sort((Comparator.comparingInt(o -> o.sum)));
 
         int left = 0;
         int right = 0;
-        long minDiff = Long.MAX_VALUE;
+        int minDiff = Integer.MAX_VALUE;
         while (right < list.size()) {
             Point L = list.get(left);
             Point R = list.get(right);
