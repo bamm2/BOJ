@@ -14,10 +14,6 @@ public class Main {
         int M = Integer.parseInt(br.readLine());
 
         boolean[] broken = new boolean[N + 1];
-        int[] arr = new int[N];
-        for (int i = 0; i < N; i++) {
-            arr[i] = i;
-        }
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             int from = Integer.parseInt(st.nextToken()) - 1;
