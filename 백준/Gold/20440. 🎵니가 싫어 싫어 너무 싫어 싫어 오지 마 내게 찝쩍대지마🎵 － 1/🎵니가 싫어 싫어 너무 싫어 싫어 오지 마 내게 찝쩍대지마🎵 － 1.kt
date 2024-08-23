@@ -4,7 +4,7 @@ import java.util.*
 
 class BOJ20440 {
 
-    private data class Times(val time: Int, val isStart: Boolean)
+    private data class Times(val time: Int, val isEnd: Boolean)
     private data class TimeResult(var from: Int = -1, var to: Int = -1, var count: Int = 0)
 
     private lateinit var st: StringTokenizer
@@ -13,24 +13,24 @@ class BOJ20440 {
     fun run() {
         repeat(readln().toInt()) {
             st = StringTokenizer(readln(), " ")
-            times.add(Times(st.nextToken().toInt(), true))
             times.add(Times(st.nextToken().toInt(), false))
+            times.add(Times(st.nextToken().toInt(), true))
         }
 
-        times.sortWith { o1, o2 -> if (o1.time == o2.time) o2.isStart.compareTo(o1.isStart) else o2.time.compareTo(o1.time) }
+        times.sortWith { o1, o2 -> if (o1.time == o2.time) o1.isEnd.compareTo(o2.isEnd) else o2.time.compareTo(o1.time) }
 
         val result = TimeResult()
         var count = 0
 
         times.forEachIndexed { index, it ->
-            if (!it.isStart) {
+            if (it.isEnd) {
                 count++
                 if (result.count < count) {
                     result.to = it.time
                     result.count = count
                 }
                 if (result.count == count) {
-                    if (index != 0 && !(times[index - 1].time == it.time && times[index - 1].isStart)) {
+                    if (index != 0 && !(times[index - 1].time == it.time && !times[index - 1].isEnd)) {
                         result.to = it.time
                     }
                 }
