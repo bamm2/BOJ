@@ -2,7 +2,6 @@ package Algorithm.String.BOJ9202
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.*
 
 class BOJ9202 {
 
@@ -47,26 +46,27 @@ class BOJ9202 {
                     val cIdx = ctoi(map[i][j])
                     if (nxt[1][cIdx] != -1) {
                         visited[i][j] = true
-                        dfs(i, j, nxt[1][cIdx], "${map[i][j]}")
+                        dfs(i, j, nxt[1][cIdx], StringBuilder().append(map[i][j]))
                         visited[i][j] = false
                     }
                 }
             }
 
-            val pq = PriorityQueue<String> { o1, o2 ->
+            val list = mutableListOf<String>()
+            list.addAll(hs)
+            list.sortWith { o1, o2 ->
                 if (o1.length == o2.length) o1.compareTo(o2) else o2.length.compareTo(o1.length)
             }
-            pq.addAll(hs)
 
             var score = 0
-            var answerStr: String? = null
-            val cnt = pq.size
+            var answerStr = ""
+            val cnt = list.size
 
-            while (pq.isNotEmpty()) {
-                val str = pq.poll()
-                answerStr = answerStr ?: str
-                score += getScore(str)
+            for (i in 0..<list.size) {
+                if (i == 0) answerStr = list[0]
+                score += getScore(list[i])
             }
+
             result.appendLine("$score $answerStr $cnt")
             if (tc != T) br.readLine()
         }
@@ -88,7 +88,7 @@ class BOJ9202 {
         }
     }
 
-    private fun dfs(r: Int, c: Int, cur: Int, str: String) {
+    private fun dfs(r: Int, c: Int, cur: Int, sb: StringBuilder) {
         for (d in 0..<8) {
             val nr = r + dir[d][0]
             val nc = c + dir[d][1]
@@ -96,9 +96,12 @@ class BOJ9202 {
             val ncIdx = ctoi(map[nr][nc])
             if (nxt[cur][ncIdx] != -1) {
                 visited[nr][nc] = true
-                val nStr = str + map[nr][nc]
-                if (ended[nxt[cur][ncIdx]]) hs.add(nStr)
-                dfs(nr, nc, nxt[cur][ctoi(map[nr][nc])], nStr)
+                sb.append(map[nr][nc])
+
+                if (ended[nxt[cur][ncIdx]]) hs.add(sb.toString())
+                dfs(nr, nc, nxt[cur][ctoi(map[nr][nc])], sb)
+
+                sb.deleteCharAt(sb.length - 1)
                 visited[nr][nc] = false
             }
         }
