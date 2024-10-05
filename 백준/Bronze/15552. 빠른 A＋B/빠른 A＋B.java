@@ -1,31 +1,21 @@
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.StringTokenizer;
+import java.io.StreamTokenizer;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static void main(String[] args) throws IOException {
+        StreamTokenizer st = new StreamTokenizer(System.in);
+        StringBuilder sb = new StringBuilder();
 
-		int T = Integer.parseInt(br.readLine());
-		StringTokenizer st;
-		for (int i = 0; i < T; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			
-			int ans =a+b;
-			bw.write(ans+ "\n"); // Writer는 반환값을 string으로 반환해야되므로 문자열 결합 
-		}
-		bw.flush();
-		br.close();
-		bw.close();
-
-	}
-
+        st.nextToken();
+        int T =(int)st.nval;
+        while(T-->0){
+            st.nextToken();
+            int a = (int)st.nval;
+            st.nextToken();
+            int b = (int)st.nval;
+            sb.append(a + b).append("\n");
+        }
+        System.out.println(sb);
+    }
 }
